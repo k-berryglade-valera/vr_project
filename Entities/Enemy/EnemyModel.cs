@@ -1,6 +1,6 @@
 
 using VRApp.Hash;
-using VRApp.Interfaces;
+using VRApp;
 
 namespace VRApp.Entities.Enemy
 {
@@ -35,6 +35,7 @@ namespace VRApp.Entities.Enemy
         {
             _enemyNames = new EnemyDataNames("default");
             _hashManager = new HashManager();
+            
             return true;
         }
 

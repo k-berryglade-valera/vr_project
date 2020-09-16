@@ -1,13 +1,19 @@
 using System;
 using System.Collections.Generic;
-using VRApp.Interfaces;
+using VRApp;
 
-namespace VRApp.Managers.Delegates
+namespace VRApp.Managers
 {
-    public class EnemyManager<T> : IObservable , IInitializable
+    public class EnemyManager<EntityType> : Manager, IObservable, IInitializable, ICreater<EntityType>
     {
-        List<IObserver> observers;
+        private List<IObserver> _observers;
         
+        public List<IObserver> Observers
+        {
+            get => _observers;
+            set => _observers = value;
+        }
+
         public EnemyManager()
         {
             Initialize();
@@ -15,17 +21,17 @@ namespace VRApp.Managers.Delegates
 
         public void RegisterObserver(IObserver observer)
         {
-            observers.Add(observer);
+            _observers.Add(observer);
         }
 
         public void RemoveObserver(IObserver observer)
         {
-            observers.Remove(observer);
+            _observers.Remove(observer);
         }
 
         public void NotifyObservers()
         {
-            foreach (var observer in observers)
+            foreach (var observer in Observers)
             {
                 
             }
@@ -33,13 +39,19 @@ namespace VRApp.Managers.Delegates
     
         public bool Initialize()
         {
-            observers = new List<IObserver>();
+            _observers = new List<IObserver>();
             return true;
         }
 
         public void Init()
         {
             throw new System.NotImplementedException();
+        }
+        
+
+        public bool CreateEntity<T>()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace VRApp.Interfaces
+namespace VRApp
 {
     public interface IInitializable
     {

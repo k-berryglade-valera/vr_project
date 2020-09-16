@@ -1,6 +1,6 @@
 using System;
 
-namespace VRApp.Interfaces
+namespace VRApp
 {
     public interface IObserver
     {
