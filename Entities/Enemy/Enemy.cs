@@ -14,13 +14,27 @@ namespace VRApp.Entities.Enemy
         [SerializeField] private float _speed;
         [SerializeField] private Transform _target;
         [FormerlySerializedAs("_sensor")] [SerializeField] private List<Transform> _sensors;
-        
-        private void ScanTarget()
+        [SerializeField] private float _speedModifier;
+        [SerializeField] private float _slowdownModifier;
+        private void Start()
         {
-            SensorRaycast();
+            _navMeshAgent = GetComponent<NavMeshAgent>();
+            _navMeshAgent.speed = _speed * _speedModifier * _slowdownModifier;
         }
 
-        private void SensorRaycast()
+        private bool ScanTarget()
+        {
+            if (SensorRaycast())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool SensorRaycast()
         {
             RaycastHit info;
             foreach (Transform sensor in _sensors)
@@ -36,26 +50,57 @@ namespace VRApp.Entities.Enemy
                         if (info.transform.CompareTag("Player"))
                         {
                             _target = info.transform;
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
                         }
                     }
                 }
+                else
+                {
+                    return false;
+                }
                 
             }
+            return false;
         }
         private bool SetName()
         {
-
+            
             return true;
         }
 
         private void Move()
         {
-            
+            _navMeshAgent.SetDestination(_target.position);
         }
-
+    
         private void Update()
         {
-            ScanTarget();
+            if (ScanTarget())
+            {
+                Stop();
+            }
+            
+            Move();
+        }
+
+        private void ContinueMove()
+        {
+            _slowdownModifier = 1.0f;
+        }
+        
+        private void Stop()
+        {
+            _slowdownModifier = 0.1f;
+            _navMeshAgent.speed = _speed * _speedModifier * _slowdownModifier;
+        }
+
+        private void Shoot()
+        {
+            
         }
     }
 }
