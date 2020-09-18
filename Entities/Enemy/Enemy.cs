@@ -16,12 +16,28 @@ namespace VRApp.Entities.Enemy
         [FormerlySerializedAs("_sensor")] [SerializeField] private List<Transform> _sensors;
         [SerializeField] private float _speedModifier;
         [SerializeField] private float _slowdownModifier;
+        [SerializeField] private Animator _animator;
+        private EnemyIK _enemyIK;
         private void Start()
         {
-            _navMeshAgent = GetComponent<NavMeshAgent>();
-            _navMeshAgent.speed = _speed * _speedModifier * _slowdownModifier;
+            
+            Init();
         }
 
+        private EnemyIK GetEnemyIK()
+        {
+            EnemyIK enemyIKComponent = GetComponent<EnemyIK>();
+            return enemyIKComponent;
+        }
+
+        private bool Init()
+        {
+            _enemyIK = GetEnemyIK();
+            _animator = GetComponent<Animator>();
+            _navMeshAgent = GetComponent<NavMeshAgent>();
+            _navMeshAgent.speed = _speed * _speedModifier * _slowdownModifier;
+            return true;
+        }
         private bool ScanTarget()
         {
             if (SensorRaycast())
@@ -90,17 +106,20 @@ namespace VRApp.Entities.Enemy
         private void ContinueMove()
         {
             _slowdownModifier = 1.0f;
+            _animator.SetBool("Walk", true);
         }
         
         private void Stop()
         {
             _slowdownModifier = 0.1f;
             _navMeshAgent.speed = _speed * _speedModifier * _slowdownModifier;
+            _animator.SetBool("Idle", true);
         }
 
-        private void Shoot()
+        private void OnAim()
         {
-            
+            _slowdownModifier = 0.1f;
+            _animator.SetBool("Aim", true);
         }
     }
 }
